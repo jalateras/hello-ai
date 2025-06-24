@@ -10,9 +10,16 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
+export interface Env {
+	AI: Ai;
+}
 
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(request, env): Promise<Response> {
+	  const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+		prompt: "What is the origin of the phrase Hello, World",
+	  });
+  
+	  return new Response(JSON.stringify(response));
 	},
-} satisfies ExportedHandler<Env>;
+  } satisfies ExportedHandler<Env>;
